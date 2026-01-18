@@ -6,6 +6,8 @@
 //! - With extreme curvatures
 //! - With very small/large inputs
 
+#![cfg(feature = "ndarray")]
+
 use hyp::{LorentzModel, PoincareBall};
 use ndarray::Array1;
 
@@ -17,11 +19,11 @@ const TOL: f64 = 1e-6;
 
 #[test]
 fn poincare_origin_is_fixed_point() {
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
     let origin = Array1::zeros(3);
 
     // Distance from origin to itself is 0
-    let d = ball.distance(&origin.view(), &origin.view());
+    let d: f64 = ball.distance(&origin.view(), &origin.view());
     assert!(
         d.abs() < TOL,
         "Origin distance to itself should be 0, got {}",
@@ -42,7 +44,7 @@ fn poincare_origin_is_fixed_point() {
 
 #[test]
 fn poincare_exp_log_at_origin() {
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
 
     // Test various tangent vectors at origin
     let tangents = [
@@ -73,7 +75,7 @@ fn poincare_exp_log_at_origin() {
 
 #[test]
 fn lorentz_origin_properties() {
-    let lorentz = LorentzModel::new(1.0);
+    let lorentz = LorentzModel::<f64>::new(1.0);
     let origin = lorentz.origin(3);
 
     // Origin should be on manifold
@@ -184,11 +186,11 @@ fn different_curvatures_affect_distances() {
     let p1 = Array1::from_vec(vec![0.1, 0.0, 0.0]);
     let p2 = Array1::from_vec(vec![0.3, 0.0, 0.0]);
 
-    let ball_k1 = PoincareBall::new(1.0);
-    let ball_k4 = PoincareBall::new(4.0);
+    let ball_k1 = PoincareBall::<f64>::new(1.0);
+    let ball_k4 = PoincareBall::<f64>::new(4.0);
 
-    let d1 = ball_k1.distance(&p1.view(), &p2.view());
-    let d4 = ball_k4.distance(&p1.view(), &p2.view());
+    let d1: f64 = ball_k1.distance(&p1.view(), &p2.view());
+    let d4: f64 = ball_k4.distance(&p1.view(), &p2.view());
 
     // Both distances should be finite and non-negative
     assert!(!d1.is_nan() && !d1.is_infinite() && d1 >= 0.0);
@@ -206,8 +208,8 @@ fn different_curvatures_affect_distances() {
 
 #[test]
 fn lorentz_curvature_effects() {
-    let l1 = LorentzModel::new(1.0);
-    let l4 = LorentzModel::new(4.0);
+    let l1 = LorentzModel::<f64>::new(1.0);
+    let l4 = LorentzModel::<f64>::new(4.0);
 
     // Create corresponding points
     let space = Array1::from_vec(vec![0.2, 0.1, 0.0]);
@@ -225,12 +227,12 @@ fn lorentz_curvature_effects() {
 
 #[test]
 fn poincare_handles_zero_vector() {
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
     let zero = Array1::zeros(3);
     let nonzero = Array1::from_vec(vec![0.5, 0.0, 0.0]);
 
     // Distance from zero to nonzero should be finite
-    let d = ball.distance(&zero.view(), &nonzero.view());
+    let d: f64 = ball.distance(&zero.view(), &nonzero.view());
     assert!(!d.is_nan(), "Distance from origin should not be NaN");
     assert!(
         !d.is_infinite(),
@@ -240,12 +242,12 @@ fn poincare_handles_zero_vector() {
 
 #[test]
 fn poincare_handles_very_small_vectors() {
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
 
     let tiny = Array1::from_vec(vec![1e-10, 0.0, 0.0]);
     let also_tiny = Array1::from_vec(vec![0.0, 1e-10, 0.0]);
 
-    let d = ball.distance(&tiny.view(), &also_tiny.view());
+    let d: f64 = ball.distance(&tiny.view(), &also_tiny.view());
 
     assert!(
         !d.is_nan(),
@@ -256,7 +258,7 @@ fn poincare_handles_very_small_vectors() {
 
 #[test]
 fn lorentz_handles_large_space_components() {
-    let lorentz = LorentzModel::new(1.0);
+    let lorentz = LorentzModel::<f64>::new(1.0);
 
     // Large Euclidean coordinates
     let large = Array1::from_vec(vec![100.0, 50.0, 25.0]);
@@ -278,7 +280,7 @@ fn lorentz_handles_large_space_components() {
 
 #[test]
 fn poincare_mobius_with_self() {
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
 
     let x = Array1::from_vec(vec![0.3, 0.2, 0.1]);
 

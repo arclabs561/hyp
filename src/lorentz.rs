@@ -1,3 +1,4 @@
+#![cfg(feature = "ndarray")]
 //! Lorentz (hyperboloid) model of hyperbolic space.
 //!
 //! The Lorentz model represents hyperbolic space as the upper sheet of a

@@ -13,7 +13,7 @@ fn main() {
     println!("Poincare Ball Basics");
     println!("====================\n");
 
-    let ball = PoincareBall::new(1.0); // curvature c=1
+    let ball = PoincareBall::<f64>::new(1.0); // curvature c=1
 
     // 1. Basic operations
     println!("1. Basic Operations");
@@ -50,7 +50,7 @@ fn main() {
     println!("   --------------|----------------------------------");
     for r in radii {
         let point = array![r, 0.0];
-        let d = ball.distance(&origin.view(), &point.view());
+        let d: f64 = ball.distance(&origin.view(), &point.view());
         println!("   {:.2}           | {:.4}", r, d);
     }
     println!("\n   Notice how distance accelerates near the boundary (r → 1)!");
@@ -64,9 +64,10 @@ fn main() {
 
     let on_manifold = ball.exp_map_zero(&tangent_vec.view());
     println!("   exp_0(v) = {:?}", on_manifold.to_vec());
+    let on_norm: f64 = on_manifold.dot(&on_manifold);
     println!(
         "   ||exp_0(v)|| = {:.4} (always < 1 due to tanh)",
-        on_manifold.dot(&on_manifold).sqrt()
+        on_norm.sqrt()
     );
 
     let recovered = ball.log_map_zero(&on_manifold.view());
@@ -97,8 +98,8 @@ fn main() {
 
     let test_point = array![0.4, 0.0];
     for c in [0.5f64, 1.0, 2.0, 4.0] {
-        let ball_c = PoincareBall::new(c);
-        let d = ball_c.distance(&origin.view(), &test_point.view());
+        let ball_c = PoincareBall::<f64>::new(c);
+        let d: f64 = ball_c.distance(&origin.view(), &test_point.view());
         let max_norm = (1.0 / c).sqrt();
         println!(
             "   c={:.1}: ball radius={:.3}, d(0, [0.4,0])={:.4}",

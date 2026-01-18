@@ -81,11 +81,17 @@
 //! - Nickel & Kiela (2018): "Learning Continuous Hierarchies in the Lorentz Model"
 //! - Chami et al. (2019): "Hyperbolic Graph Convolutional Neural Networks"
 
+pub mod core;
+
+#[cfg(feature = "ndarray")]
 use ndarray::{Array1, ArrayView1};
+#[cfg(feature = "ndarray")]
 use num_traits::{Float, FromPrimitive, Zero};
 
+#[cfg(feature = "ndarray")]
 pub mod lorentz;
 
+#[cfg(feature = "ndarray")]
 pub use lorentz::LorentzModel;
 
 /// Poincaré Ball manifold.
@@ -93,11 +99,13 @@ pub use lorentz::LorentzModel;
 /// The Poincaré ball is the interior of the unit ball {x : ||x|| < 1/√c}
 /// equipped with the hyperbolic metric. Curvature c controls the "strength"
 /// of hyperbolic effects.
+#[cfg(feature = "ndarray")]
 pub struct PoincareBall<T> {
     /// Curvature parameter (c > 0)
     pub c: T,
 }
 
+#[cfg(feature = "ndarray")]
 impl<T> PoincareBall<T>
 where
     T: Float + FromPrimitive + Zero + ndarray::ScalarOperand + ndarray::LinalgScalar,
@@ -118,16 +126,20 @@ where
 
         let denom = one + two * c * xy + c * c * x_norm_sq * y_norm_sq;
 
-        let term1 = (one + two * c * xy + c * y_norm_sq) * x;
-        let term2 = (one - c * x_norm_sq) * y;
+        // ndarray supports `&Array * scalar`, but not `scalar * &Array`.
+        let s1 = one + two * c * xy + c * y_norm_sq;
+        let s2 = one - c * x_norm_sq;
+        let term1 = x.to_owned() * s1;
+        let term2 = y.to_owned() * s2;
 
         (term1 + term2) / denom
     }
 
     /// Hyperbolic distance.
     pub fn distance(&self, x: &ArrayView1<T>, y: &ArrayView1<T>) -> T {
-        let neg_x = -x;
-        let diff = self.mobius_add(&neg_x.view(), y);
+        let neg_x = x.mapv(|v| -v);
+        let neg_x_view = neg_x.view();
+        let diff = self.mobius_add(&neg_x_view, y);
         let diff_norm = diff.dot(&diff).sqrt();
         let c_sqrt = self.c.sqrt();
         let two = T::from_f64(2.0).unwrap();
@@ -184,7 +196,7 @@ where
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "ndarray"))]
 mod tests {
     use super::*;
     use ndarray::array;

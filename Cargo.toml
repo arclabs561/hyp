@@ -12,7 +12,7 @@ keywords = ["hyperbolic", "poincare", "lorentz", "embeddings", "geometry"]
 categories = ["algorithms", "science", "mathematics"]
 
 [dependencies]
-ndarray = "0.16"
+ndarray = { version = "0.16", optional = true }
 num-traits = "0.2"
 thiserror = "2.0"
 innr = { path = "../innr", version = "0.1.0", optional = true }
@@ -25,10 +25,27 @@ rand_chacha = "0.9"
 criterion = { version = "0.5", features = ["html_reports"] }
 
 [features]
-default = []
+default = ["ndarray"]
+ndarray = ["dep:ndarray"]
 simd = ["dep:innr"]
 
 [[bench]]
 name = "hyperbolic"
 harness = false
+
+[[example]]
+name = "poincare_basics"
+required-features = ["ndarray"]
+
+[[example]]
+name = "tree_embedding"
+required-features = ["ndarray"]
+
+[[example]]
+name = "taxonomy_embedding"
+required-features = ["ndarray"]
+
+[[example]]
+name = "hierarchy_recovery"
+required-features = ["ndarray"]
 

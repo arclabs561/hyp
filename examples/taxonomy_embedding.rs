@@ -50,7 +50,7 @@ fn main() {
     println!("======================================\n");
     println!("Based on evaluation from Nickel & Kiela (2017) Poincare Embeddings.\n");
 
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
 
     // Define taxonomy with parent-child edges
     // Format: (parent, child, depth_of_child)

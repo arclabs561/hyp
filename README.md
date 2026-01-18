@@ -7,6 +7,15 @@ Dual-licensed under MIT or Apache-2.0.
 
 [crates.io](https://crates.io/crates/hyp) | [docs.rs](https://docs.rs/hyp)
 
+## Backend choices
+
+This crate is split into:
+
+- `hyp::core`: backend-agnostic implementations that operate on slices (`&[T]`) and return `Vec<T>`.
+  This is the “math substrate” layer.
+- `hyp`’s `ndarray` API: kept behind the `ndarray` feature (enabled by default) for a convenient
+  concrete backend.
+
 ```rust
 use hyp::PoincareBall;
 use ndarray::array;
@@ -42,3 +51,9 @@ Hyperbolic space has exponentially growing volume with radius, matching how tree
 - `c = 1.0` — Standard hyperbolic space
 - `c > 1.0` — Stronger curvature (distances grow faster)
 - `c → 0` — Approaches Euclidean
+
+## References (high-signal starting points)
+
+- Nickel & Kiela (2017): *Poincaré Embeddings for Learning Hierarchical Representations*.
+- Ganea, Bécigneul, Hofmann (2018): *Hyperbolic Neural Networks* (Poincaré + Lorentz tools).
+- Gromov (1987): *Hyperbolic groups* (δ-hyperbolicity; four-point characterizations).

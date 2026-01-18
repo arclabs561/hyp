@@ -32,7 +32,7 @@ fn main() {
     println!();
 
     // Embed in hyperbolic space (2D Poincare ball, curvature c=1.0)
-    let poincare = PoincareBall::new(1.0);
+    let poincare = PoincareBall::<f64>::new(1.0);
     let embeddings = embed_hierarchy(&taxonomy, &poincare);
 
     // Analyze embedding quality
@@ -149,7 +149,7 @@ fn print_hierarchy(tax: &Taxonomy, node: &str, indent: usize) {
 
 /// Embed hierarchy using Poincare embeddings.
 /// Places root at origin, children at angles around parent.
-fn embed_hierarchy(tax: &Taxonomy, poincare: &PoincareBall) -> HashMap<String, Array1<f64>> {
+fn embed_hierarchy(tax: &Taxonomy, poincare: &PoincareBall<f64>) -> HashMap<String, Array1<f64>> {
     let mut embeddings: HashMap<String, Array1<f64>> = HashMap::new();
 
     // Root at origin
@@ -207,7 +207,7 @@ fn embed_hierarchy(tax: &Taxonomy, poincare: &PoincareBall) -> HashMap<String, A
 fn analyze_depth_distance(
     tax: &Taxonomy,
     embeddings: &HashMap<String, Array1<f64>>,
-    _poincare: &PoincareBall,
+    _poincare: &PoincareBall<f64>,
 ) {
     println!("Depth vs Distance from Origin:");
     println!("{:<20} {:>6} {:>10}", "Entity", "Depth", "||x||");
@@ -241,7 +241,7 @@ fn analyze_depth_distance(
 fn analyze_structural_distances(
     tax: &Taxonomy,
     embeddings: &HashMap<String, Array1<f64>>,
-    poincare: &PoincareBall,
+    poincare: &PoincareBall<f64>,
 ) {
     println!("\nParent-Child vs Sibling Distances:");
 
@@ -280,7 +280,7 @@ fn analyze_structural_distances(
 fn measure_hierarchy_preservation(
     tax: &Taxonomy,
     embeddings: &HashMap<String, Array1<f64>>,
-    poincare: &PoincareBall,
+    poincare: &PoincareBall<f64>,
 ) -> f64 {
     // For each entity, retrieve nearest neighbors by hyperbolic distance
     // Measure if ancestors appear before non-ancestors

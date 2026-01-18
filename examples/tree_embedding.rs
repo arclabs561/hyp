@@ -8,14 +8,14 @@
 //!
 //! # Geometric Hierarchy Stack
 //!
-//! The Tekne Stack provides different geometries for different structures:
+//! The Mathematical Foundation provides different geometries for different structures:
 //!
 //! | Data Type       | Geometry    | Crate       | Why                           |
 //! |-----------------|-------------|-------------|-------------------------------|
 //! | Trees           | Hyperbolic  | hyp         | Exponential volume = trees    |
 //! | DAGs/Lattices   | Boxes       | subsume     | Containment = entailment      |
 //! | General graphs  | Euclidean   | grafene-kge | Dense vectors, TransE/RotatE  |
-//! | Dense vectors   | Euclidean   | plesio    | HNSW, IVF-PQ, standard ANN    |
+//! | Dense vectors   | Euclidean   | jin         | HNSW, IVF-PQ, standard ANN    |
 //!
 //! This example shows why 2D hyperbolic space can embed trees that would
 //! require O(depth) dimensions in Euclidean space.
@@ -33,7 +33,7 @@ fn main() {
     println!("Tree Embedding in Hyperbolic Space");
     println!("===================================\n");
 
-    let ball = PoincareBall::new(1.0);
+    let ball = PoincareBall::<f64>::new(1.0);
 
     // Embed a simple tree:
     //          root

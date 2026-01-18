@@ -42,6 +42,20 @@ fn main() {
         println!("  δ (4-point exact) = {delta}");
         println!("  ultrametric max violation = {um}");
         println!();
+    } else {
+        // Prefer a small real graph shipped in-repo.
+        let karate = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("testdata/karate_club.edgelist");
+        if karate.exists() {
+            let g = load_undirected_edgelist(&karate).expect("failed to load testdata/karate_club.edgelist");
+            let n = g.len();
+            println!("default dataset: karate club n={n}");
+            let d = all_pairs_shortest_path(&g);
+            let delta = diagnostics::delta_hyperbolicity_four_point_exact_f64(&d, n);
+            let um = diagnostics::ultrametric_max_violation_f64(&d, n);
+            println!("  δ (4-point exact) = {delta}");
+            println!("  ultrametric max violation = {um}");
+            println!();
+        }
     }
 
     // 1) A tree metric: path distances on a tree are 0-hyperbolic.

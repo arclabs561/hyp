@@ -1,0 +1,27 @@
+# Florentine families marriage network (undirected).
+#
+# Source: the "florentine families" example graph distributed with NetworkX.
+# Nodes are mapped to integer ids by sorting the original family-name nodes.
+#
+# Format: "u v" per line, whitespace-separated integer node ids. Lines starting with '#' ignored.
+# Size: 15 nodes / 20 edges.
+0 8
+1 5
+1 6
+1 8
+2 4
+2 8
+3 6
+3 10
+3 13
+4 10
+4 13
+6 7
+6 14
+8 11
+8 12
+8 14
+9 12
+10 13
+11 13
+11 14

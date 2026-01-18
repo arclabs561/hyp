@@ -48,6 +48,9 @@ let sum = ball.mobius_add(&x.view(), &y.view());
   distances, then measure:
   - δ-hyperbolicity (4-point, exact \(O(n^4)\) for small \(n\))
   - ultrametric max violation
+  - defaults to `testdata/karate_club.edgelist`
+  - set `HYP_DATASET=lesmis` or `HYP_DATASET=florentine` for other bundled graphs
+  - set `HYP_EDGELIST=/path/to/edges.txt` to run on your own graph
 
 ## Why Hyperbolic?
 

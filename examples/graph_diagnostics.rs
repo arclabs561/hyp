@@ -44,11 +44,23 @@ fn main() {
         println!();
     } else {
         // Prefer a small real graph shipped in-repo.
-        let karate = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("testdata/karate_club.edgelist");
-        if karate.exists() {
-            let g = load_undirected_edgelist(&karate).expect("failed to load testdata/karate_club.edgelist");
+        //
+        // HYP_DATASET selects from bundled datasets:
+        // - karate (default)
+        // - lesmis
+        // - florentine
+        let ds = std::env::var("HYP_DATASET").unwrap_or_else(|_| "karate".to_string());
+        let rel = match ds.as_str() {
+            "karate" => "testdata/karate_club.edgelist",
+            "lesmis" => "testdata/les_miserables.edgelist",
+            "florentine" => "testdata/florentine_families.edgelist",
+            other => panic!("unknown HYP_DATASET '{other}' (expected: karate|lesmis|florentine)"),
+        };
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(rel);
+        if path.exists() {
+            let g = load_undirected_edgelist(&path).expect("failed to load bundled dataset");
             let n = g.len();
-            println!("default dataset: karate club n={n}");
+            println!("default dataset: {ds} n={n}");
             let d = all_pairs_shortest_path(&g);
             let delta = diagnostics::delta_hyperbolicity_four_point_exact_f64(&d, n);
             let um = diagnostics::ultrametric_max_violation_f64(&d, n);

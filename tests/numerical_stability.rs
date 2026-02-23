@@ -8,7 +8,7 @@
 
 #![cfg(feature = "ndarray")]
 
-use hyp::{LorentzModel, PoincareBall};
+use hyperball::{LorentzModel, PoincareBall};
 use ndarray::Array1;
 
 const TOL: f64 = 1e-6;

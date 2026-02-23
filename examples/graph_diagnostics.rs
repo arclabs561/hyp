@@ -10,7 +10,7 @@
 //!
 //! Distances here are shortest-path distances on an unweighted graph.
 
-use hyp::core::diagnostics;
+use hyperball::core::diagnostics;
 
 fn main() {
     // Optional: load a real graph from an undirected edge list.

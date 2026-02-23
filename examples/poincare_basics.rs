@@ -6,7 +6,7 @@
 //! cargo run --example poincare_basics --release
 //! ```
 
-use hyp::PoincareBall;
+use hyperball::PoincareBall;
 use ndarray::array;
 
 fn main() {

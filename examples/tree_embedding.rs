@@ -26,7 +26,7 @@
 //! cargo run --example tree_embedding --release
 //! ```
 
-use hyp::PoincareBall;
+use hyperball::PoincareBall;
 use ndarray::{array, Array1};
 
 fn main() {

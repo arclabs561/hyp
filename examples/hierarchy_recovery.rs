@@ -10,7 +10,7 @@
 //! cargo run --example hierarchy_recovery --release
 //! ```
 
-use hyp::PoincareBall;
+use hyperball::PoincareBall;
 use ndarray::{array, Array1};
 use std::collections::HashMap;
 

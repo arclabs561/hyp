@@ -41,7 +41,7 @@
 //! cargo run --example taxonomy_embedding --release
 //! ```
 
-use hyp::PoincareBall;
+use hyperball::PoincareBall;
 use ndarray::array;
 use std::collections::HashMap;
 

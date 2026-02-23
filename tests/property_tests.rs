@@ -23,7 +23,7 @@
 
 #![cfg(feature = "ndarray")]
 
-use hyp::{LorentzModel, PoincareBall};
+use hyperball::{LorentzModel, PoincareBall};
 use ndarray::{Array1, ArrayView1};
 use proptest::prelude::*;
 use skel::Manifold;
@@ -422,7 +422,7 @@ proptest! {
     // Poincare -> Lorentz -> Poincare round trip
     #[test]
     fn conversion_round_trip(x in poincare_point(3)) {
-        use hyp::lorentz::conversions::{lorentz_to_poincare, poincare_to_lorentz};
+        use hyperball::lorentz::conversions::{lorentz_to_poincare, poincare_to_lorentz};
 
         let ball = PoincareBall::<f64>::new(1.0);
         let lorentz = LorentzModel::<f64>::new(1.0);
@@ -443,7 +443,7 @@ proptest! {
         x in poincare_point(3),
         y in poincare_point(3)
     ) {
-        use hyp::lorentz::conversions::poincare_to_lorentz;
+        use hyperball::lorentz::conversions::poincare_to_lorentz;
 
         let ball = PoincareBall::<f64>::new(1.0);
         let lorentz = LorentzModel::<f64>::new(1.0);

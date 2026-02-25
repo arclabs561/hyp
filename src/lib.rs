@@ -191,11 +191,25 @@ impl Manifold for PoincareBall<f64> {
     }
 }
 
-/// Poincaré Ball manifold.
+/// Poincare ball model of hyperbolic geometry.
 ///
-/// The Poincaré ball is the interior of the unit ball {x : ||x|| < 1/√c}
-/// equipped with the hyperbolic metric. Curvature c controls the "strength"
-/// of hyperbolic effects.
+/// The open ball \(\mathbb{B}^d_c = \{x \in \mathbb{R}^d : c\|x\|^2 < 1\}\)
+/// equipped with the Riemannian metric
+///
+/// \[
+/// g_x = \lambda_x^2 I, \quad \lambda_x = \frac{2}{1 - c\|x\|^2}
+/// \]
+///
+/// where \(\lambda_x\) is the conformal factor. As \(\|x\| \to 1/\sqrt{c}\),
+/// \(\lambda_x \to \infty\), so distances near the boundary grow without bound --
+/// this is how infinite hierarchical depth fits in a finite Euclidean volume.
+///
+/// **Curvature**: the sectional curvature is \(-c\) everywhere. Larger \(c\)
+/// means stronger negative curvature (more "room" for tree branching).
+/// The standard choice is \(c = 1\).
+///
+/// **Key operations**: all defined via Mobius gyrovector space arithmetic
+/// (Ungar, 2008). See individual method docs for formulas.
 #[cfg(feature = "ndarray")]
 pub struct PoincareBall<T> {
     /// Curvature parameter (c > 0)
@@ -211,7 +225,18 @@ where
         Self { c }
     }
 
-    /// Mobius addition: x + y = (1 + 2c<x,y> + c||y||^2)x + (1 - c||x||^2)y / (1 + 2c<x,y> + c^2||x||^2||y||^2)
+    /// Mobius addition in the Poincare ball (gyrovector space operation).
+    ///
+    /// \[
+    /// x \oplus_c y = \frac{(1 + 2c\langle x,y\rangle + c\|y\|^2)\,x + (1 - c\|x\|^2)\,y}
+    ///                      {1 + 2c\langle x,y\rangle + c^2\|x\|^2\|y\|^2}
+    /// \]
+    ///
+    /// This is the non-commutative, non-associative "addition" that replaces
+    /// Euclidean vector addition in hyperbolic space. It satisfies:
+    /// - \(x \oplus_c 0 = x\) (identity)
+    /// - \(x \oplus_c (-x) = 0\) (inverse)
+    /// - Left cancellation: \((-x) \oplus_c (x \oplus_c y) = y\)
     pub fn mobius_add(&self, x: &ArrayView1<T>, y: &ArrayView1<T>) -> Array1<T> {
         let x_norm_sq = x.dot(x);
         let y_norm_sq = y.dot(y);
@@ -232,7 +257,15 @@ where
         (term1 + term2) / denom
     }
 
-    /// Hyperbolic distance.
+    /// Hyperbolic distance in the Poincare ball.
+    ///
+    /// \[
+    /// d_c(x, y) = \frac{2}{\sqrt{c}}\,\mathrm{arctanh}\bigl(\sqrt{c}\,\|(-x) \oplus_c y\|\bigr)
+    /// \]
+    ///
+    /// This is the geodesic distance on the Riemannian manifold \((\mathbb{B}^d_c, g)\).
+    /// Near the origin it approximates \(2\|x - y\|\); near the boundary it grows
+    /// logarithmically in \(1/(1-c\|x\|^2)\).
     pub fn distance(&self, x: &ArrayView1<T>, y: &ArrayView1<T>) -> T {
         let neg_x = x.mapv(|v| -v);
         let neg_x_view = neg_x.view();
@@ -244,8 +277,10 @@ where
         two / c_sqrt * (c_sqrt * diff_norm).atanh()
     }
 
-    /// Logarithmic map at origin (tangent space -> manifold).
-    /// For origin, log_0(y) = y.
+    /// Logarithmic map at the origin: \(\log_0(y) = \frac{\mathrm{arctanh}(\sqrt{c}\|y\|)}{\sqrt{c}\|y\|}\,y\).
+    ///
+    /// Maps a point on the manifold to a tangent vector at the origin.
+    /// For small \(\|y\|\), this is approximately the identity.
     pub fn log_map_zero(&self, y: &ArrayView1<T>) -> Array1<T> {
         let y_norm = y.dot(y).sqrt();
         let epsilon = T::from_f64(1e-7).unwrap(); // f32 friendly epsilon
@@ -258,8 +293,10 @@ where
         y * scale
     }
 
-    /// Exponential map at origin (manifold -> tangent space).
-    /// exp_0(v) = tanh(sqrt(c)*||v||) / (sqrt(c)*||v||) * v
+    /// Exponential map at the origin: \(\exp_0(v) = \frac{\tanh(\sqrt{c}\|v\|)}{\sqrt{c}\|v\|}\,v\).
+    ///
+    /// Maps a tangent vector at the origin to a point on the manifold.
+    /// The \(\tanh\) ensures the result stays inside the ball (\(\tanh(t) < 1\) for all \(t\)).
     pub fn exp_map_zero(&self, v: &ArrayView1<T>) -> Array1<T> {
         let v_norm = v.dot(v).sqrt();
         let epsilon = T::from_f64(1e-7).unwrap();

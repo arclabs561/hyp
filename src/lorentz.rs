@@ -1,22 +1,40 @@
 //! Lorentz (hyperboloid) model of hyperbolic space.
 //!
-//! The Lorentz model represents hyperbolic space as the upper sheet of a
-//! hyperboloid in Minkowski space. Points satisfy: -x_0^2 + x_1^2 + ... + x_n^2 = -1/c
+//! Represents \(\mathbb{H}^d_c\) as the upper sheet of a two-sheeted hyperboloid
+//! embedded in \((d+1)\)-dimensional Minkowski space:
 //!
-//! Compared to the Poincare ball:
-//! - Better gradient properties (no vanishing near boundary)
-//! - More numerically stable for optimization
+//! \[
+//! \mathcal{H}^d_c = \{x \in \mathbb{R}^{d+1} : \langle x, x \rangle_\mathcal{L} = -1/c,\; x_0 > 0\}
+//! \]
+//!
+//! where \(\langle x, y \rangle_\mathcal{L} = -x_0 y_0 + \sum_{i=1}^d x_i y_i\) is
+//! the Minkowski inner product.
+//!
+//! **Compared to the Poincare ball**:
+//! - Gradients are well-behaved everywhere (no conformal factor blowup)
+//! - More numerically stable for Riemannian SGD (Nickel & Kiela, 2018)
+//! - Natural for Lorentzian geometry (relativity, causal structure)
 //! - Slightly smaller representable radius (~19 vs ~38 in float64)
 //!
-//! Reference: Nickel & Kiela, "Learning Continuous Hierarchies in the Lorentz Model"
+//! The two models are isometric: [`from_euclidean`](LorentzModel::from_euclidean) and
+//! [`to_euclidean`](LorentzModel::to_euclidean) convert between them.
+//!
+//! ## References
+//!
+//! - Nickel & Kiela (2018). "Learning Continuous Hierarchies in the Lorentz Model"
+//! - Ganea, Becigneul, Hofmann (2018). "Hyperbolic Neural Networks"
 
 use ndarray::{Array1, ArrayView1};
 use num_traits::{Float, FromPrimitive, Zero};
 
 /// Lorentz (hyperboloid) model manifold.
 ///
-/// Points are represented as (n+1)-dimensional vectors where the first
-/// component is the "time" coordinate and the rest are "space" coordinates.
+/// Points live in \(\mathbb{R}^{d+1}\): the first component \(x_0\) is the
+/// "time" coordinate (always positive), the remaining \(x_1, \ldots, x_d\)
+/// are "space" coordinates. All points satisfy the hyperboloid constraint
+/// \(\langle x, x \rangle_\mathcal{L} = -1/c\).
+///
+/// The origin of hyperbolic space is the "north pole" \((1/\sqrt{c}, 0, \ldots, 0)\).
 pub struct LorentzModel<T> {
     /// Curvature parameter (c > 0). The hyperboloid satisfies <x,x>_L = -1/c.
     pub c: T,
@@ -31,13 +49,19 @@ where
         Self { c }
     }
 
-    /// Minkowski inner product: <x,y>_L = -x_0*y_0 + x_1*y_1 + ... + x_n*y_n
+    /// Minkowski inner product: \(\langle x, y \rangle_\mathcal{L} = -x_0 y_0 + \sum_{i=1}^d x_i y_i\).
+    ///
+    /// This is the indefinite bilinear form with signature \((-,+,+,\ldots,+)\).
+    /// For points on the hyperboloid, \(\langle x, x \rangle_\mathcal{L} = -1/c\).
     pub fn minkowski_dot(&self, x: &ArrayView1<T>, y: &ArrayView1<T>) -> T {
         assert!(x.len() == y.len() && x.len() >= 2);
         -x[0] * y[0] + x.slice(ndarray::s![1..]).dot(&y.slice(ndarray::s![1..]))
     }
 
-    /// Lorentzian distance: d(x,y) = (1/sqrt(c)) * arcosh(-c * <x,y>_L)
+    /// Geodesic distance: \(d_c(x,y) = \frac{1}{\sqrt{c}}\,\mathrm{arcosh}(-c\langle x,y\rangle_\mathcal{L})\).
+    ///
+    /// Uses a Taylor expansion \(\mathrm{arcosh}(1+\delta) \approx \sqrt{2\delta}\) near
+    /// \(\delta = 0\) for numerical stability when \(x \approx y\).
     pub fn distance(&self, x: &ArrayView1<T>, y: &ArrayView1<T>) -> T {
         let inner = self.minkowski_dot(x, y);
         let arg = -self.c * inner;

@@ -21,8 +21,28 @@
 //!
 //! ## References
 //!
-//! - Nickel & Kiela (2018). "Learning Continuous Hierarchies in the Lorentz Model"
-//! - Ganea, Becigneul, Hofmann (2018). "Hyperbolic Neural Networks"
+//! - Nickel & Kiela (2018), "Learning Continuous Hierarchies in the Lorentz Model"
+//!   -- introduced the Lorentz model for representation learning.
+//! - Ganea, Becigneul, Hofmann (2018), "Hyperbolic Neural Networks"
+//!   -- foundational hyperbolic NN layers using exp/log maps.
+//! - Mishne et al. (2023), "The Numerical Stability of Hyperbolic
+//!   Representation Learning" (ICML) -- validates the design choices in
+//!   this module: the Taylor expansion for acosh near 1 and the preference
+//!   for the Lorentz model over Poincare for numerical stability.
+//! - van der Klis et al. (2026), "Fast and Geometrically Grounded Lorentz
+//!   Neural Networks" -- state-of-the-art Lorentz-space layers built on
+//!   exp/log/transport as building blocks (the same surface this module
+//!   exposes).
+//! - He et al. (2024), "Lorentzian Residual Neural Networks" -- residual
+//!   connections using Lorentz exp/log maps; validates that exp/log is
+//!   the right abstraction for deep hyperbolic networks.
+//! - Fan et al. (2024), "Enhancing Hyperbolic KG Embeddings via Lorentz
+//!   Transformations" (ACL Findings) -- Lorentz boosts as a potential
+//!   future first-class operation alongside exp/log/transport.
+//! - Sakai & Iiduka (2023), "Convergence of Riemannian Stochastic Gradient
+//!   Descent on Hadamard Manifolds" -- theoretical guarantee that
+//!   optimization using exp/log converges on Hadamard manifolds (of which
+//!   the hyperboloid is an instance).
 
 use ndarray::{Array1, ArrayView1};
 use num_traits::{Float, FromPrimitive, Zero};

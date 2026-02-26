@@ -7,6 +7,12 @@
 //! spaces at various dimensions, and compare how well pairwise graph distances
 //! are preserved. The punchline: Poincare@5 can match or beat Euclidean@50.
 //!
+//! For improved embedding strategies (GPU-compatible, lower distortion
+//! bounds), see van Spengler & Mettes (2025), "Low-distortion and
+//! GPU-compatible Tree Embeddings in Hyperbolic Space."  The deterministic
+//! path-based embedding used here is a simplified variant of the Sarkar
+//! (2011) construction.
+//!
 //! Embedding strategy (same for both geometries):
 //! - Each node's position is determined by its root-path (sequence of
 //!   left/right choices). At each tree level, the left/right choice adds

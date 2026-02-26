@@ -166,7 +166,13 @@ fn main() {
     println!("   Area at radius r grows like sinh(r), not r^2.");
 
     // 5. Compare to Euclidean
+    //
+    // Note: Both columns use the same hand-placed (x,y) coordinates.
+    // A fair comparison would optimize each embedding for its own geometry.
+    // The point here is that the hyperbolic metric *amplifies* distances
+    // near the boundary, so the same coordinates encode more hierarchy.
     println!("\n5. Euclidean vs Hyperbolic Comparison");
+    println!("   (Same coordinates, different metrics. See note in source.)");
     let euclidean_dist = |a: &Array1<f64>, b: &Array1<f64>| {
         let diff = a - b;
         diff.dot(&diff).sqrt()

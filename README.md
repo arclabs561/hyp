@@ -103,6 +103,40 @@ cargo test -p hyperball
 
 73 tests: unit tests, property-based tests (proptest), and numerical stability tests covering Mobius axioms (inverse, left cancellation), metric axioms (symmetry, triangle inequality, boundary growth), exp/log round-trips, parallel transport norm preservation, cross-model isometry, and Lorentz tangent space operations.
 
+## References
+
+### Foundational
+
+- Nickel & Kiela (2017), "Poincare Embeddings for Learning Hierarchical Representations" -- introduced hyperbolic embeddings for ML.
+- Nickel & Kiela (2018), "Learning Continuous Hierarchies in the Lorentz Model" -- Lorentz model is more stable for optimization.
+- Ganea, Becigneul, Hofmann (2018), "Hyperbolic Neural Networks" -- foundational hyperbolic layers.
+- Chami et al. (2019), "Hyperbolic Graph Convolutional Neural Networks" -- GCNs in hyperbolic space.
+
+### Numerical stability and capacity
+
+- Mishne et al. (2023), "The Numerical Stability of Hyperbolic Representation Learning" (ICML) -- validates Taylor expansion for acosh near 1, Lorentz over Poincare for stability.
+- Kratsios et al. (2023), "Capacity Bounds for Hyperbolic Neural Network Representations of Latent Tree Structures" -- 2D hyperbolic space suffices for tree embedding.
+
+### Training and practice
+
+- Yang et al. (2023), "Hyperbolic Representation Learning: Revisiting and Advancing" (ICML) -- gradient clipping and LR scheduling matter as much as model choice.
+- Sakai & Iiduka (2023), "Convergence of Riemannian SGD on Hadamard Manifolds" -- convergence guarantees for optimization on the hyperboloid.
+
+### Recent Lorentz-space architectures
+
+- van der Klis et al. (2026), "Fast and Geometrically Grounded Lorentz Neural Networks" -- state-of-the-art Lorentz layers.
+- He et al. (2024), "Lorentzian Residual Neural Networks" -- residual connections via Lorentz exp/log.
+- Fan et al. (2024), "Enhancing Hyperbolic KG Embeddings via Lorentz Transformations" (ACL Findings) -- Lorentz boosts for knowledge graphs.
+
+### Embeddings and distortion
+
+- van Spengler & Mettes (2025), "Low-distortion and GPU-compatible Tree Embeddings in Hyperbolic Space" -- improved embedding strategies.
+
+### Flow matching and geometry
+
+- Chen & Lipman (2023), "Riemannian Flow Matching on General Geometries" -- foundational for hyperbolic flow matching.
+- Di Giovanni et al. (2022), "Heterogeneous Manifolds for Curvature-Aware Graph Embedding" -- mixed-curvature spaces as future direction.
+
 ## License
 
 MIT OR Apache-2.0

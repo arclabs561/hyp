@@ -77,15 +77,46 @@
 //!
 //! # References
 //!
-//! - Nickel & Kiela (2017): "Poincaré Embeddings for Learning Hierarchical Representations"
-//! - Nickel & Kiela (2018): "Learning Continuous Hierarchies in the Lorentz Model"
-//! - Chami et al. (2019): "Hyperbolic Graph Convolutional Neural Networks"
-//! - Chen & Lipman (2023): "Riemannian Flow Matching on General Geometries" (foundational for Hyperbolic FM)
-//! - Zaghen et al. (2025): "Towards Variational Flow Matching on General Geometries" (RG-VFM)
+//! ## Foundational
 //!
-//! # General Geometric Deep Learning
+//! - Nickel & Kiela (2017), "Poincare Embeddings for Learning Hierarchical
+//!   Representations" -- introduced hyperbolic embeddings for ML.
+//! - Nickel & Kiela (2018), "Learning Continuous Hierarchies in the Lorentz
+//!   Model" -- showed the Lorentz model is more stable for optimization.
+//! - Ganea, Becigneul, Hofmann (2018), "Hyperbolic Neural Networks" --
+//!   foundational hyperbolic NN layers using Mobius gyrovector operations.
+//! - Chami et al. (2019), "Hyperbolic Graph Convolutional Neural Networks"
+//!   -- GCNs in hyperbolic space.
 //!
-//! - Bronstein et al. (2021/2025): "Geometric Deep Learning" (book/course) — see [geometricdeeplearning.com](https://geometricdeeplearning.com/).
+//! ## Capacity and training
+//!
+//! - Kratsios et al. (2023), "Capacity Bounds for Hyperbolic Neural Network
+//!   Representations of Latent Tree Structures" -- proves that 2D hyperbolic
+//!   space suffices for embedding any tree with bounded distortion; justifies
+//!   the low-dimensional regime this library targets.
+//! - Yang et al. (2023), "Hyperbolic Representation Learning: Revisiting and
+//!   Advancing" (ICML) -- training tricks (gradient clipping, LR scheduling)
+//!   matter as much as model choice; practical guidance for users of this
+//!   library.
+//!
+//! ## Flow matching and geometry
+//!
+//! - Chen & Lipman (2023), "Riemannian Flow Matching on General Geometries"
+//!   -- foundational for hyperbolic flow matching via the Manifold trait.
+//! - Zaghen et al. (2025), "Towards Variational Flow Matching on General
+//!   Geometries" (RG-VFM).
+//!
+//! ## Mixed curvature (future direction)
+//!
+//! - Di Giovanni et al. (2022), "Heterogeneous Manifolds for Curvature-Aware
+//!   Graph Embedding" -- mixed-curvature product spaces (hyperbolic x
+//!   spherical x Euclidean) as a natural extension when data has both
+//!   hierarchical and cyclical structure.
+//!
+//! ## General geometric deep learning
+//!
+//! - Bronstein et al. (2021/2025), "Geometric Deep Learning" (book/course)
+//!   -- see `geometricdeeplearning.com`.
 
 pub mod core;
 

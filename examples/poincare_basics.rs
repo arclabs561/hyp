@@ -1,5 +1,7 @@
 //! Poincare Ball Basics
 //!
+//! See also: `lorentz_basics.rs` for the Lorentz (hyperboloid) model equivalent.
+//!
 //! Demonstrates basic operations in hyperbolic space using the Poincare ball model.
 //!
 //! ```bash

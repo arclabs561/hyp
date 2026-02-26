@@ -55,5 +55,13 @@ name = "distortion_vs_dimension"
 required-features = ["ndarray"]
 
 [[example]]
+name = "lorentz_basics"
+required-features = ["ndarray"]
+
+[[example]]
+name = "poincare_sgd"
+required-features = ["ndarray"]
+
+[[example]]
 name = "graph_diagnostics"
 

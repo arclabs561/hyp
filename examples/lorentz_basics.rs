@@ -1,5 +1,7 @@
 //! Lorentz hyperboloid model basics.
 //!
+//! See also: `poincare_basics.rs` for the Poincare ball model equivalent.
+//!
 //! The Lorentz model represents hyperbolic space as the upper sheet of a
 //! two-sheeted hyperboloid in Minkowski space: -x_0^2 + x_1^2 + ... + x_n^2 = -1/c
 //!

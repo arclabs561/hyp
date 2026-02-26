@@ -340,14 +340,41 @@ fn measure_hierarchy_preservation(
 }
 
 fn compare_with_euclidean(tax: &Taxonomy, hyp_embeddings: &HashMap<String, Array1<f64>>) {
-    // Simple Euclidean embedding: depth as y, spread as x
+    // Euclidean baseline: spread nodes by BFS depth (y) and sibling index (x).
+    // This is a simple MDS-like layout -- not optimized, but uses the same
+    // structural information as the hyperbolic embedding (depth + sibling order).
     let mut euc_embeddings: HashMap<String, (f64, f64)> = HashMap::new();
 
-    for entity in &tax.entities {
-        let d = *tax.depth.get(entity).unwrap_or(&0) as f64;
-        // Use a hash for x-spread
-        let x = hash_f64(entity) * 2.0 - 1.0;
-        euc_embeddings.insert(entity.clone(), (x, d));
+    // BFS to assign (x, y) positions: y = depth, x = centered sibling index.
+    euc_embeddings.insert("entity".to_string(), (0.0, 0.0));
+    let mut queue = vec!["entity".to_string()];
+
+    while let Some(node) = queue.pop() {
+        let d = *tax.depth.get(&node).unwrap_or(&0) as f64;
+
+        let children: Vec<_> = tax
+            .edges
+            .iter()
+            .filter(|(pi, _)| tax.entities[*pi] == node)
+            .map(|(_, ci)| tax.entities[*ci].clone())
+            .collect();
+
+        let n_children = children.len();
+        let parent_x = euc_embeddings.get(&node).map(|(x, _)| *x).unwrap_or(0.0);
+
+        // Spread children symmetrically around parent's x, with width shrinking by depth.
+        let spread = 2.0 / (d + 1.0).powi(2);
+        for (i, child) in children.iter().enumerate() {
+            let offset = if n_children <= 1 {
+                0.0
+            } else {
+                (i as f64 - (n_children - 1) as f64 / 2.0) * spread
+            };
+            let child_x = parent_x + offset;
+            let child_y = d + 1.0;
+            euc_embeddings.insert(child.clone(), (child_x, child_y));
+            queue.push(child.clone());
+        }
     }
 
     // Measure distortion
@@ -381,6 +408,9 @@ fn compare_with_euclidean(tax: &Taxonomy, hyp_embeddings: &HashMap<String, Array
     println!("\nEmbedding Distortion (lower is better):");
     println!("  Hyperbolic (2D): {:.3}", hyp_distortion / count as f64);
     println!("  Euclidean (2D):  {:.3}", euc_distortion / count as f64);
+    println!("\n  Note: the Euclidean baseline uses a BFS-depth + sibling-index layout.");
+    println!("  Neither embedding is optimized; a fair comparison would optimize each");
+    println!("  for its own geometry.");
 }
 
 fn pearson_correlation(x: &[f64], y: &[f64]) -> f64 {
@@ -403,10 +433,3 @@ fn pearson_correlation(x: &[f64], y: &[f64]) -> f64 {
     num / (dx2.sqrt() * dy2.sqrt())
 }
 
-fn hash_f64(s: &str) -> f64 {
-    let mut h: u64 = 0;
-    for b in s.bytes() {
-        h = h.wrapping_mul(31).wrapping_add(b as u64);
-    }
-    (h as f64) / (u64::MAX as f64)
-}

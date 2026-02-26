@@ -7,6 +7,7 @@ Hyperbolic geometry for hierarchical data.
 | Example | What It Teaches |
 |---------|-----------------|
 | `poincare_basics` | Core operations: distance, Mobius addition, exp/log maps |
+| `lorentz_basics` | Lorentz (hyperboloid) model: same operations, different representation |
 | `tree_embedding` | Why 2D hyperbolic can embed trees needing O(depth) Euclidean dims |
 
 ```sh
@@ -20,10 +21,12 @@ cargo run --example tree_embedding --release
 |---------|-----------------|
 | `taxonomy_embedding` | Embed WordNet-style taxonomy, evaluate with MAP |
 | `hierarchy_recovery` | Recover parent-child structure from distances |
+| `poincare_sgd` | Learn Poincare embeddings via Riemannian SGD on a toy tree |
 
 ```sh
 cargo run --example taxonomy_embedding --release
 cargo run --example hierarchy_recovery --release
+cargo run --example poincare_sgd --release
 ```
 
 ## Why Hyperbolic?

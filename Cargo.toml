@@ -63,5 +63,9 @@ name = "poincare_sgd"
 required-features = ["ndarray"]
 
 [[example]]
+name = "lorentz_sgd"
+required-features = ["ndarray"]
+
+[[example]]
 name = "graph_diagnostics"
 

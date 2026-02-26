@@ -22,11 +22,15 @@ cargo run --example tree_embedding --release
 | `taxonomy_embedding` | Embed WordNet-style taxonomy, evaluate with MAP |
 | `hierarchy_recovery` | Recover parent-child structure from distances |
 | `poincare_sgd` | Learn Poincare embeddings via Riemannian SGD on a toy tree |
+| `lorentz_sgd` | Learn Lorentz embeddings via Riemannian SGD on the same tree |
+
+Lorentz avoids the numerical instability of Poincare near the boundary but requires Minkowski-metric gradient correction. Both examples embed the same 25-node tree; compare their distance ratios and depth-norm correlation to see the tradeoff.
 
 ```sh
 cargo run --example taxonomy_embedding --release
 cargo run --example hierarchy_recovery --release
 cargo run --example poincare_sgd --release
+cargo run --example lorentz_sgd --release
 ```
 
 ## Why Hyperbolic?

@@ -69,3 +69,7 @@ required-features = ["ndarray"]
 [[example]]
 name = "graph_diagnostics"
 
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
